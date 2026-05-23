@@ -1,8 +1,8 @@
 FROM golang:1.22-alpine AS builder
-WORKDIR /src
-COPY go.mod ./
+WORKDIR /build
+COPY src/go.mod ./
 RUN go mod download
-COPY . .
+COPY src/ ./
 RUN go mod tidy && \
     CGO_ENABLED=0 GOOS=linux go build \
         -trimpath \
