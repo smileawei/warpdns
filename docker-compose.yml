@@ -1,0 +1,20 @@
+services:
+  warpdns:
+    build: .
+    image: warpdns:latest
+    container_name: warpdns
+    restart: unless-stopped
+    ports:
+      - "1053:1053/udp"
+    volumes:
+      - ./config.toml:/etc/warpdns/config.toml:ro
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

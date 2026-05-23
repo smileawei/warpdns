@@ -1,0 +1,39 @@
+# warpdns 配置示例
+# 将 UDP DNS 查询转发到自定义 DoH 上游。
+
+# UDP 监听地址,默认 0.0.0.0:1053
+listen = "0.0.0.0:1053"
+
+# 日志级别预留(目前仅占位)
+log_level = "info"
+
+[upstream]
+# DoH 上游基址(scheme + host[:port])
+url = "https://dns.example.com"
+
+# URI 路径(可自定义)
+path = "/dns-query"
+
+# 请求方法: POST(RFC 8484 默认) 或 GET(base64url 编码)
+method = "POST"
+
+# 请求超时
+timeout = "10s"
+
+# 跳过 TLS 校验(自签名上游时使用,生产慎用)
+insecure_skip_verify = false
+
+# SNI 覆盖(留空使用 url 的 host)
+server_name = ""
+
+# 自定义 HTTP Header(认证 token、自定义路由 key 等)
+[upstream.headers]
+# Authorization = "Bearer YOUR_TOKEN"
+# X-Custom-Key  = "value"
+
+[ecs]
+# 是否注入 EDNS Client Subnet
+enabled = false
+
+# 注入的子网(CIDR)。enabled=true 时必填
+subnet = "1.2.3.0/24"
