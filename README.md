@@ -20,12 +20,21 @@ A lightweight proxy that converts local UDP DNS queries into custom DNS-over-HTT
 - ✅ TOML 配置文件
 - ✅ 单二进制,基于 distroless 的最小镜像 (~10MB),以 `nonroot` 用户运行
 
+### 镜像
+预构建镜像每次推送 `main` 与 tag 都会发布到:
+- Docker Hub: [`smileawei/warpdns`](https://hub.docker.com/r/smileawei/warpdns)
+- GHCR: [`ghcr.io/smileawei/warpdns`](https://github.com/smileawei/warpdns/pkgs/container/warpdns)
+
+可用 tag: `latest`、`v0.1.0` 等版本号、`main`、`sha-xxxxxxx`。
+
 ### 快速开始 — Docker Compose
 ```bash
-git clone git@github.com:smileawei/warpdns.git
-cd warpdns
-cp config.example.toml config.toml      # 修改为你的 DoH 上游
-docker compose up -d --build
+# 只需要这两个文件
+curl -O https://raw.githubusercontent.com/smileawei/warpdns/main/docker-compose.yml
+curl -o config.toml https://raw.githubusercontent.com/smileawei/warpdns/main/config.example.toml
+
+# 编辑 config.toml 改为你的 DoH 上游
+docker compose up -d
 docker compose logs -f
 ```
 验证:
@@ -35,11 +44,18 @@ dig @127.0.0.1 -p 1053 example.com
 
 ### 快速开始 — Docker
 ```bash
-docker build -t warpdns .
 docker run -d --name warpdns \
   -p 1053:1053/udp \
   -v $(pwd)/config.toml:/etc/warpdns/config.toml:ro \
-  warpdns
+  --restart unless-stopped \
+  smileawei/warpdns:latest
+```
+
+### 本地构建(开发者)
+```bash
+git clone git@github.com:smileawei/warpdns.git
+cd warpdns
+docker build -t warpdns:dev .
 ```
 
 ### 配置说明 (`config.toml`)
@@ -80,12 +96,21 @@ docker run -d --name warpdns \
 - ✅ TOML config
 - ✅ Single static binary on a distroless image (~10MB), running as `nonroot`
 
+### Images
+Prebuilt images are published on every push to `main` and on tags:
+- Docker Hub: [`smileawei/warpdns`](https://hub.docker.com/r/smileawei/warpdns)
+- GHCR: [`ghcr.io/smileawei/warpdns`](https://github.com/smileawei/warpdns/pkgs/container/warpdns)
+
+Available tags: `latest`, semver like `v0.1.0`, `main`, `sha-xxxxxxx`.
+
 ### Quick start — Docker Compose
 ```bash
-git clone git@github.com:smileawei/warpdns.git
-cd warpdns
-cp config.example.toml config.toml      # edit your DoH upstream
-docker compose up -d --build
+# Only these two files are needed
+curl -O https://raw.githubusercontent.com/smileawei/warpdns/main/docker-compose.yml
+curl -o config.toml https://raw.githubusercontent.com/smileawei/warpdns/main/config.example.toml
+
+# Edit config.toml to point at your DoH upstream
+docker compose up -d
 docker compose logs -f
 ```
 Test:
@@ -95,11 +120,18 @@ dig @127.0.0.1 -p 1053 example.com
 
 ### Quick start — Docker
 ```bash
-docker build -t warpdns .
 docker run -d --name warpdns \
   -p 1053:1053/udp \
   -v $(pwd)/config.toml:/etc/warpdns/config.toml:ro \
-  warpdns
+  --restart unless-stopped \
+  smileawei/warpdns:latest
+```
+
+### Build locally (developers)
+```bash
+git clone git@github.com:smileawei/warpdns.git
+cd warpdns
+docker build -t warpdns:dev .
 ```
 
 ### Configuration (`config.toml`)

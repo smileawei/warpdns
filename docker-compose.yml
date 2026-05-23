@@ -1,8 +1,8 @@
 services:
   warpdns:
-    build: .
-    image: warpdns:latest
+    image: smileawei/warpdns:latest
     container_name: warpdns
+    pull_policy: always
     restart: unless-stopped
     ports:
       - "1053:1053/udp"
